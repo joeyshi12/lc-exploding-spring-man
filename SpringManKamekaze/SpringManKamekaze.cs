@@ -1,6 +1,5 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
-using SpringManKamekaze.Patches;
 using HarmonyLib;
 
 namespace SpringManKamekaze
@@ -10,7 +9,7 @@ namespace SpringManKamekaze
     {
         private const string modGUID = "coolcat0.LC_SpringManKamekaze";
         private const string modName = "LC_SpringManKamekaze";
-        private const string modVersion = "0.1.0";
+        private const string modVersion = "1.0.0";
 
         private readonly Harmony harmony = new Harmony(modGUID);
 
@@ -28,7 +27,19 @@ namespace SpringManKamekaze
             mls.LogInfo($"{modName} version {modVersion} has been loaded");
 
             harmony.PatchAll(typeof(SpringManKamekazeBase));
-            harmony.PatchAll(typeof(SpringManKamekazePatch));
+            harmony.PatchAll(typeof(SpringManAIPatch));
+        }
+    }
+
+    [HarmonyPatch(typeof(SpringManAI))]
+    internal class SpringManAIPatch
+    {
+        [HarmonyPatch("OnCollideWithPlayer")]
+        [HarmonyPostfix]
+        static void SelfDestructSpringMan(SpringManAI __instance)
+        {
+            Landmine.SpawnExplosion(__instance.transform.position, true);
+            __instance.KillEnemy(true);
         }
     }
 }
