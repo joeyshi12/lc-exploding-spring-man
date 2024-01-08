@@ -1,9 +1,0 @@
-{
-    "name": "Spring Man Kamekaze",
-    "version_number": "1.0.0",
-    "website_url": "https://github.com/joeyshi12/lc-spring-man-kamekaze",
-    "description": "Spring men explode.",
-    "dependencies": [
-        "BepInEx-BepInExPack-5.4.2100"
-    ]
-}

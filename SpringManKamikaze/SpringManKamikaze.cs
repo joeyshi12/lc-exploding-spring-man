@@ -1,20 +1,19 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using UnityEngine;
 
-namespace SpringManKamekaze
+namespace SpringManKamikaze
 {
     [BepInPlugin(modGUID, modName, modVersion)]
-    public class SpringManKamekazeBase : BaseUnityPlugin
+    public class SpringManKamikazeBase : BaseUnityPlugin
     {
-        private const string modGUID = "coolcat0.LC_SpringManKamekaze";
-        private const string modName = "LC_SpringManKamekaze";
-        private const string modVersion = "1.0.0";
+        private const string modGUID = "coolcat0.LC_SpringManKamikaze";
+        private const string modName = "LC_SpringManKamikaze";
+        private const string modVersion = "1.0.1";
 
         private readonly Harmony harmony = new Harmony(modGUID);
-
-        private static SpringManKamekazeBase Instance;
-
+        private static SpringManKamikazeBase Instance;
         public static ManualLogSource mls;
 
         void Awake()
@@ -25,8 +24,7 @@ namespace SpringManKamekaze
             }
             mls = BepInEx.Logging.Logger.CreateLogSource(modGUID);
             mls.LogInfo($"{modName} version {modVersion} has been loaded");
-
-            harmony.PatchAll(typeof(SpringManKamekazeBase));
+            harmony.PatchAll(typeof(SpringManKamikazeBase));
             harmony.PatchAll(typeof(SpringManAIPatch));
         }
     }
@@ -35,11 +33,14 @@ namespace SpringManKamekaze
     internal class SpringManAIPatch
     {
         [HarmonyPatch("OnCollideWithPlayer")]
-        [HarmonyPostfix]
-        static void SelfDestructSpringMan(SpringManAI __instance)
+        [HarmonyPrefix]
+        static bool OnCollideWithPlayerPrefix(SpringManAI __instance)
         {
-            Landmine.SpawnExplosion(__instance.transform.position, true);
+            Vector3 explosionPosition = __instance.transform.position + Vector3.up;
+            Landmine.SpawnExplosion(explosionPosition, true);
+            Landmine.SpawnExplosion(explosionPosition, true);
             __instance.KillEnemy(true);
+            return false;
         }
     }
 }
