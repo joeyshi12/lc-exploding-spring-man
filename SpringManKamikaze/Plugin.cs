@@ -4,7 +4,6 @@ using HarmonyLib;
 using RuntimeNetcodeRPCValidator;
 using SpringManKamikaze.MonoBehaviours;
 using SpringManKamikaze.Patches;
-using UnityEngine;
 
 namespace SpringManKamikaze
 {
@@ -18,7 +17,6 @@ namespace SpringManKamikaze
         private readonly Harmony harmony = new Harmony(modGUID);
 
         public static Plugin instance;
-        public GameObject smkNetworkManagerPrefab;
         static ManualLogSource mls;
         private NetcodeValidator netcodeValidator;
 
