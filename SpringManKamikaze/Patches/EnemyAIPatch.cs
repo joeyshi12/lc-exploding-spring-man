@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using SpringManKamikaze.MonoBehaviours;
+using System.Numerics;
 
 namespace SpringManKamikaze.Patches
 {
@@ -12,9 +13,10 @@ namespace SpringManKamikaze.Patches
         {
             if (__instance is SpringManAI springManAI && !springManAI.isEnemyDead)
             {
-                SerializableVector3 explosionPosition = new SerializableVector3(springManAI.transform.position);
-                SmkNetworkManager.instance.SpawnExplosionServerRpc(explosionPosition);
                 springManAI.KillEnemyServerRpc(true);
+                springManAI.isEnemyDead = true;
+                SerializableVector3 position = new SerializableVector3(springManAI.transform.position);
+                SmkNetworkManager.instance.SpawnExplosionServerRpc(position);
             }
         }
     }
