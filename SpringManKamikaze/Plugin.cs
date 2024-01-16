@@ -13,7 +13,7 @@ namespace SpringManKamikaze
     {
         const string modGUID = "coolcat0.LC_SpringManKamikaze";
         const string modName = "LC_SpringManKamikaze";
-        const string modVersion = "1.1.2";
+        const string modVersion = "1.1.3";
         private readonly Harmony harmony = new Harmony(modGUID);
 
         public static Plugin instance;
