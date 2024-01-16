@@ -22,10 +22,10 @@ namespace SpringManKamikaze.MonoBehaviours
         [ClientRpc]
         private void SpawnExplosionClientRpc(SerializableVector3 position)
         {
-            SpawnExplosion(position.ToVector3());
+            SpawnExplosion(position.ToVector3() + Vector3.up);
         }
 
-        public void SpawnExplosion(Vector3 explosionPosition, float damageRadius = 6f, float minDamage = 10f, float maxDamage = 50f) {
+        public void SpawnExplosion(Vector3 explosionPosition, float damageRadius = 6f, float minDamage = 50f, float maxDamage = 100f) {
             Plugin.mls.LogInfo("Spawning explosion at position = " + explosionPosition.ToString());
             Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), RoundManager.Instance.mapPropsContainer.transform).SetActive(value: true);
 
@@ -53,8 +53,7 @@ namespace SpringManKamikaze.MonoBehaviours
                 {
                     playerControllerB = collider.gameObject.GetComponent<PlayerControllerB>();
                     if (playerControllerB != null && playerControllerB.IsOwner) {
-                        float t = distance / damageRadius;
-                        float damage = Mathf.Lerp(minDamage, maxDamage, t);
+                        float damage = Mathf.Lerp(minDamage, maxDamage, distance / damageRadius);
                         playerControllerB.DamagePlayer(Mathf.RoundToInt(damage));
                     }
                 }
@@ -80,9 +79,9 @@ namespace SpringManKamikaze.MonoBehaviours
             int num3 = ~LayerMask.GetMask("Colliders");
             overlapColliders = Physics.OverlapSphere(explosionPosition, 10f, num3);
             Rigidbody rigidBody;
-            for (int j = 0; j < overlapColliders.Length; j++)
+            for (int i = 0; i < overlapColliders.Length; i++)
             {
-                rigidBody = overlapColliders[j].GetComponent<Rigidbody>();
+                rigidBody = overlapColliders[i].GetComponent<Rigidbody>();
                 if (rigidBody != null)
                 {
                     rigidBody.AddExplosionForce(70f, explosionPosition, 10f);

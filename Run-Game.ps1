@@ -1,6 +1,6 @@
-# Thunderstore profile to test with
+# r2modman profile to test with
 $Profile = "Dev"
-$ProfilePath = "C:\Users\Joey Shi\AppData\Roaming/Thunderstore Mod Manager\DataFolder\LethalCompany\profiles\$Profile"
+$ProfilePath = "C:\Users\Joey Shi\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\$Profile"
 $DoorstopTarget = "$ProfilePath\BepInEx\core\BepInEx.Preloader.dll"
 
 # Build and copy dll to profile plugins folder

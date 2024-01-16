@@ -11,7 +11,7 @@ namespace SpringManKamikaze.Patches
         [HarmonyPrefix]
         static void AddChatMessagePrefix(HUDManager __instance, ref string chatMessage, ref string nameOfUserWhoTyped)
         {
-            if (chatMessage[0] != '/')
+            if (chatMessage[0] != '!')
             {
                 return;
             }
@@ -19,7 +19,7 @@ namespace SpringManKamikaze.Patches
             String[] args = chatMessage.Split(' ');
             switch (args[0])
             {
-                case "/explode":
+                case "!explode":
                     explodePlayer(args);
                     break;
                 default:
