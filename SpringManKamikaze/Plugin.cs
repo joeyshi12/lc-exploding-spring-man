@@ -13,11 +13,11 @@ namespace SpringManKamikaze
     {
         const string modGUID = "coolcat0.LC_SpringManKamikaze";
         const string modName = "LC_SpringManKamikaze";
-        const string modVersion = "1.1.0";
+        const string modVersion = "1.1.1";
         private readonly Harmony harmony = new Harmony(modGUID);
 
         public static Plugin instance;
-        static ManualLogSource mls;
+        public static ManualLogSource mls;
         private NetcodeValidator netcodeValidator;
 
         void Awake()
@@ -33,6 +33,7 @@ namespace SpringManKamikaze
 
             harmony.PatchAll(typeof(EnemyAIPatch));
             harmony.PatchAll(typeof(SpringManAIPatch));
+            harmony.PatchAll(typeof(HUDManagerPatch));
         }
     }
 }

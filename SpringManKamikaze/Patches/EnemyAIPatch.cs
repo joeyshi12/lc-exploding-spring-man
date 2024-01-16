@@ -10,9 +10,12 @@ namespace SpringManKamikaze.Patches
         [HarmonyPostfix]
         static void HitEnemyOnLocalClientPostfix(EnemyAI __instance)
         {
-            SerializableVector3 explosionPosition = new SerializableVector3(__instance.transform.position);
-            SmkNetworkManager.instance.SpawnExplosionServerRpc(explosionPosition);
-            __instance.KillEnemyServerRpc(true);
+            if (__instance is SpringManAI springManAI && !springManAI.isEnemyDead)
+            {
+                SerializableVector3 explosionPosition = new SerializableVector3(springManAI.transform.position);
+                SmkNetworkManager.instance.SpawnExplosionServerRpc(explosionPosition);
+                springManAI.KillEnemyServerRpc(true);
+            }
         }
     }
 }

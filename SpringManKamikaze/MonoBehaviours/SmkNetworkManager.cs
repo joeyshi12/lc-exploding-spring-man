@@ -22,8 +22,11 @@ namespace SpringManKamikaze.MonoBehaviours
         [ClientRpc]
         private void SpawnExplosionClientRpc(SerializableVector3 position)
         {
-            Vector3 explosionPosition = position.ToVector3();
-            Debug.Log("Spawning explosion at position = " + explosionPosition.ToString());
+            SpawnExplosion(position.ToVector3());
+        }
+
+        public void SpawnExplosion(Vector3 explosionPosition, float damageRadius = 6f, float minDamage = 10f, float maxDamage = 50f) {
+            Plugin.mls.LogInfo("Spawning explosion at position = " + explosionPosition.ToString());
             Instantiate(StartOfRound.Instance.explosionPrefab, explosionPosition, Quaternion.Euler(-90f, 0f, 0f), RoundManager.Instance.mapPropsContainer.transform).SetActive(value: true);
 
             float num = Vector3.Distance(GameNetworkManager.Instance.localPlayerController.transform.position, explosionPosition);
@@ -36,52 +39,53 @@ namespace SpringManKamikaze.MonoBehaviours
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
             }
 
-            Collider[] array = Physics.OverlapSphere(explosionPosition, 6f, 2621448, QueryTriggerInteraction.Collide);
-            PlayerControllerB playerControllerB = null;
-            for (int i = 0; i < array.Length; i++)
+            Collider[] overlapColliders = Physics.OverlapSphere(explosionPosition, damageRadius, 2621448, QueryTriggerInteraction.Collide);
+            Collider collider; PlayerControllerB playerControllerB; Landmine landmine; EnemyAICollisionDetect enemyAICollisionDetect;
+            for (int i = 0; i < overlapColliders.Length; i++)
             {
-                float num2 = Vector3.Distance(explosionPosition, array[i].transform.position);
-                if (num2 > 4f && Physics.Linecast(explosionPosition, array[i].transform.position + Vector3.up * 0.3f, 256, QueryTriggerInteraction.Ignore))
+                collider = overlapColliders[i];
+                float distance = Vector3.Distance(explosionPosition, collider.transform.position);
+                if (distance > 4f && Physics.Linecast(explosionPosition, collider.transform.position + Vector3.up * 0.3f, 256, QueryTriggerInteraction.Ignore))
                 {
                     continue;
                 }
-
-                if (array[i].gameObject.layer == 3)
+                if (collider.gameObject.layer == 3)
                 {
-                    playerControllerB = array[i].gameObject.GetComponent<PlayerControllerB>();
-                    if (playerControllerB != null && playerControllerB.IsOwner)
-                    {
-                        playerControllerB.DamagePlayer(50);
+                    playerControllerB = collider.gameObject.GetComponent<PlayerControllerB>();
+                    if (playerControllerB != null && playerControllerB.IsOwner) {
+                        float t = distance / damageRadius;
+                        float damage = Mathf.Lerp(minDamage, maxDamage, t);
+                        playerControllerB.DamagePlayer(Mathf.RoundToInt(damage));
                     }
                 }
-                else if (array[i].gameObject.layer == 21)
+                else if (collider.gameObject.layer == 21)
                 {
-                    Landmine componentInChildren = array[i].gameObject.GetComponentInChildren<Landmine>();
-                    if (componentInChildren != null && !componentInChildren.hasExploded && num2 < 6f)
+                    landmine = collider.gameObject.GetComponentInChildren<Landmine>();
+                    if (landmine != null && !landmine.hasExploded && distance < damageRadius)
                     {
-                        Debug.Log("Setting off other mine");
-                        componentInChildren.ExplodeMineServerRpc();
+                        Plugin.mls.LogInfo("Setting off other mine");
+                        landmine.ExplodeMineServerRpc();
                     }
                 }
-                else if (array[i].gameObject.layer == 19)
+                else if (collider.gameObject.layer == 19)
                 {
-                    EnemyAICollisionDetect componentInChildren2 = array[i].gameObject.GetComponentInChildren<EnemyAICollisionDetect>();
-                    if (componentInChildren2 != null && componentInChildren2.mainScript.IsOwner && num2 < 4.5f)
+                    enemyAICollisionDetect = collider.gameObject.GetComponentInChildren<EnemyAICollisionDetect>();
+                    if (enemyAICollisionDetect != null && enemyAICollisionDetect.mainScript.IsOwner && distance < damageRadius * 0.75f)
                     {
-                        componentInChildren2.mainScript.HitEnemyOnLocalClient(6);
+                        enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(6);
                     }
                 }
             }
 
-            int num3 = ~LayerMask.GetMask("Room");
-            num3 = ~LayerMask.GetMask("Colliders");
-            array = Physics.OverlapSphere(explosionPosition, 10f, num3);
-            for (int j = 0; j < array.Length; j++)
+            int num3 = ~LayerMask.GetMask("Colliders");
+            overlapColliders = Physics.OverlapSphere(explosionPosition, 10f, num3);
+            Rigidbody rigidBody;
+            for (int j = 0; j < overlapColliders.Length; j++)
             {
-                Rigidbody component = array[j].GetComponent<Rigidbody>();
-                if (component != null)
+                rigidBody = overlapColliders[j].GetComponent<Rigidbody>();
+                if (rigidBody != null)
                 {
-                    component.AddExplosionForce(70f, explosionPosition, 10f);
+                    rigidBody.AddExplosionForce(70f, explosionPosition, 10f);
                 }
             }
         }
