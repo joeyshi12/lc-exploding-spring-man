@@ -1,7 +1,5 @@
 ﻿using HarmonyLib;
 using SpringManKamikaze.MonoBehaviours;
-using System.Collections;
-using UnityEngine;
 
 namespace SpringManKamikaze.Patches
 {
