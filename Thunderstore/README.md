@@ -1,3 +1,3 @@
-# lc-spring-man-kamikaze
+# LC Spring Man Kamikaze
 
-Spring men explode when hitting the player
+Spring men explode when hitting the player.
