@@ -1,7 +1,6 @@
 # r2modman profile to test with
 $Profile = "Dev"
 $ProfilePath = "$env:APPDATA\r2modmanPlus-local\LethalCompany\profiles\$Profile"
-$DoorstopTarget = "$ProfilePath\BepInEx\core\BepInEx.Preloader.dll"
 
 # Build and copy dll to profile plugins folder
 dotnet build
