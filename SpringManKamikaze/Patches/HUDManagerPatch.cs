@@ -20,14 +20,14 @@ namespace SpringManKamikaze.Patches
             switch (args[0])
             {
                 case "!explode":
-                    explodePlayer(args);
+                    ExplodePlayer(args);
                     break;
                 default:
                     break;
             }
         }
 
-        private static void explodePlayer(String[] args)
+        private static void ExplodePlayer(String[] args)
         {
             if (args.Length < 2) {
                 return;
