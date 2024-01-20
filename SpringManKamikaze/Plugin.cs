@@ -11,9 +11,9 @@ namespace SpringManKamikaze
     [BepInDependency(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin
     {
-        const string modGUID = "coolcat0.LC_SpringManKamikaze";
-        const string modName = "LC_SpringManKamikaze";
-        const string modVersion = "1.1.3";
+        const string modGUID = "coolcat0.SpringManKamikaze";
+        const string modName = "SpringManKamikaze";
+        const string modVersion = "1.1.4";
         private readonly Harmony harmony = new Harmony(modGUID);
 
         public static Plugin instance;
@@ -28,12 +28,11 @@ namespace SpringManKamikaze
             netcodeValidator.PatchAll();
             netcodeValidator.BindToPreExistingObjectByBehaviour<SmkNetworkManager, Terminal>();
 
-            mls = BepInEx.Logging.Logger.CreateLogSource(modGUID);
-            mls.LogInfo($"{modName} version {modVersion} has been loaded");
-
             harmony.PatchAll(typeof(EnemyAIPatch));
             harmony.PatchAll(typeof(SpringManAIPatch));
-            harmony.PatchAll(typeof(HUDManagerPatch));
+
+            mls = BepInEx.Logging.Logger.CreateLogSource(modGUID);
+            mls.LogInfo($"{modName} version {modVersion} has been loaded");
         }
     }
 }

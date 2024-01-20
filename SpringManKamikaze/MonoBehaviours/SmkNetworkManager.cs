@@ -40,10 +40,9 @@ namespace SpringManKamikaze.MonoBehaviours
             }
 
             Collider[] overlapColliders = Physics.OverlapSphere(explosionPosition, damageRadius, 2621448, QueryTriggerInteraction.Collide);
-            Collider collider; PlayerControllerB playerControllerB; Landmine landmine; EnemyAICollisionDetect enemyAICollisionDetect;
             for (int i = 0; i < overlapColliders.Length; i++)
             {
-                collider = overlapColliders[i];
+                Collider collider = overlapColliders[i];
                 float distance = Vector3.Distance(explosionPosition, collider.transform.position);
                 if (distance > 4f && Physics.Linecast(explosionPosition, collider.transform.position + Vector3.up * 0.3f, 256, QueryTriggerInteraction.Ignore))
                 {
@@ -51,7 +50,7 @@ namespace SpringManKamikaze.MonoBehaviours
                 }
                 if (collider.gameObject.layer == 3)
                 {
-                    playerControllerB = collider.gameObject.GetComponent<PlayerControllerB>();
+                    PlayerControllerB playerControllerB = collider.gameObject.GetComponent<PlayerControllerB>();
                     if (playerControllerB != null && playerControllerB.IsOwner) {
                         float damage = Mathf.Lerp(minDamage, maxDamage, distance / damageRadius);
                         playerControllerB.DamagePlayer(Mathf.RoundToInt(damage));
@@ -59,7 +58,7 @@ namespace SpringManKamikaze.MonoBehaviours
                 }
                 else if (collider.gameObject.layer == 21)
                 {
-                    landmine = collider.gameObject.GetComponentInChildren<Landmine>();
+                    Landmine landmine = collider.gameObject.GetComponentInChildren<Landmine>();
                     if (landmine != null && !landmine.hasExploded && distance < damageRadius)
                     {
                         Plugin.mls.LogInfo("Setting off other mine");
@@ -68,7 +67,7 @@ namespace SpringManKamikaze.MonoBehaviours
                 }
                 else if (collider.gameObject.layer == 19)
                 {
-                    enemyAICollisionDetect = collider.gameObject.GetComponentInChildren<EnemyAICollisionDetect>();
+                    EnemyAICollisionDetect enemyAICollisionDetect = collider.gameObject.GetComponentInChildren<EnemyAICollisionDetect>();
                     if (enemyAICollisionDetect != null && enemyAICollisionDetect.mainScript.IsOwner && distance < damageRadius * 0.75f)
                     {
                         enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(6);
@@ -78,10 +77,9 @@ namespace SpringManKamikaze.MonoBehaviours
 
             int num3 = ~LayerMask.GetMask("Colliders");
             overlapColliders = Physics.OverlapSphere(explosionPosition, 10f, num3);
-            Rigidbody rigidBody;
             for (int i = 0; i < overlapColliders.Length; i++)
             {
-                rigidBody = overlapColliders[i].GetComponent<Rigidbody>();
+                Rigidbody rigidBody = overlapColliders[i].GetComponent<Rigidbody>();
                 if (rigidBody != null)
                 {
                     rigidBody.AddExplosionForce(70f, explosionPosition, 10f);

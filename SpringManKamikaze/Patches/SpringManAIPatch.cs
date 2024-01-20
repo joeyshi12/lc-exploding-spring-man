@@ -10,11 +10,16 @@ namespace SpringManKamikaze.Patches
         [HarmonyPrefix]
         static bool OnCollideWithPlayerPrefix(SpringManAI __instance)
         {
-            __instance.KillEnemyServerRpc(true);
-            __instance.isEnemyDead = true;
-            SerializableVector3 position = new SerializableVector3(__instance.transform.position);
-            SmkNetworkManager.instance.SpawnExplosionServerRpc(position);
+            ExplodeSpringMan(__instance);
             return false;
+        }
+
+        public static void ExplodeSpringMan(SpringManAI springManAI)
+        {
+            springManAI.KillEnemyServerRpc(true);
+            springManAI.isEnemyDead = true;
+            SerializableVector3 position = new SerializableVector3(springManAI.transform.position);
+            SmkNetworkManager.instance.SpawnExplosionServerRpc(position);
         }
     }
 }

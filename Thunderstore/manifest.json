@@ -1,8 +1,8 @@
 {
     "name": "SpringManKamikaze",
-    "version_number": "1.1.3",
+    "version_number": "1.1.4",
     "website_url": "https://github.com/joeyshi12/lc-spring-man-kamikaze",
-    "description": "Spring men explode when hitting the player",
+    "description": "Spring men explode when hitting or getting hit by the player",
     "dependencies": [
         "BepInEx-BepInExPack-5.4.2100",
         "Ozone-Runtime_Netcode_Patcher-0.2.5"
