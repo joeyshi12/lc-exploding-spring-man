@@ -7,6 +7,6 @@ dotnet build
 $OutputPath = ".\SpringManKamikaze\bin\Debug\net7.0\SpringManKamiKaze.dll"
 $PluginPath = "$ProfilePath\BepInEx\plugins"
 
-Copy-Item "$PluginPath" ".\Thunderstore" -Force
+Copy-Item "$OutputPath" ".\Thunderstore" -Force
 Copy-Item "$OutputPath" "$PluginPath" -Force
 Write-Host "Copied plugin to $PluginPath"
